@@ -2,11 +2,10 @@
 /* eslint-disable  no-console */
 
 const Alexa = require('ask-sdk-core');
+const { canHandle } = require('ask-utils')
 
 const LaunchRequestHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
-  },
+  canHandle: (handlerInput) => canHandle(handlerInput, 'LaunchRequest'),
   handle(handlerInput) {
     const speechText = 'Welcome to the Alexa Skills Kit, you can say hello!';
 
@@ -17,11 +16,11 @@ const LaunchRequestHandler = {
       .getResponse();
   },
 };
+exports.LaunchRequestHandler = LaunchRequestHandler
 
 const HelloWorldIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'HelloWorldIntent';
+  canHandle: (handlerInput) => {
+    return canHandle(handlerInput, 'IntentRequest', 'HelloWorldIntent')
   },
   handle(handlerInput) {
     const speechText = 'Hello World!';
@@ -32,12 +31,10 @@ const HelloWorldIntentHandler = {
       .getResponse();
   },
 };
+exports.HelloWorldIntentHandler = HelloWorldIntentHandler
 
 const HelpIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
-  },
+  canHandle: (handlerInput) => canHandle(handlerInput, 'IntentRequest', 'AMAZON.HelpIntent'),
   handle(handlerInput) {
     const speechText = 'You can say hello to me!';
 
@@ -50,10 +47,8 @@ const HelpIntentHandler = {
 };
 
 const CancelAndStopIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent'
-        || handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
+  canHandle: (handlerInput) => {
+    return canHandle(handlerInput, 'IntentRequest', 'AMAZON.CancelIntent') || canHandle(handlerInput, 'IntentRequest', 'AMAZON.StopIntent')
   },
   handle(handlerInput) {
     const speechText = 'Goodbye!';
@@ -66,9 +61,7 @@ const CancelAndStopIntentHandler = {
 };
 
 const SessionEndedRequestHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
-  },
+  canHandle: (handlerInput) => canHandle(handlerInput, 'SessionEndedRequest'),
   handle(handlerInput) {
     console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
 
@@ -77,9 +70,7 @@ const SessionEndedRequestHandler = {
 };
 
 const ErrorHandler = {
-  canHandle() {
-    return true;
-  },
+  canHandle: (handlerInput) => true,
   handle(handlerInput, error) {
     console.log(`Error handled: ${error.message}`);
 
